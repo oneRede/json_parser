@@ -127,3 +127,19 @@ impl JsonValue for JsonObject {
         JsonType::JsonObject(self)
     }
 }
+
+enum  TokenType {
+    String,
+    Int,
+    Float,
+    Bool,
+    Null,
+    Colon,
+    Comma,
+    LeftBigBracket,
+    RightBigBracket,
+    LeftMiddleBracket,
+    RightMiddleBracket,
+}
+
+
