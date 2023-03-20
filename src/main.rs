@@ -1,6 +1,5 @@
-mod json_type;
-
+mod lexer;
 fn main() {
-    
-    println!("Hello, world!");
+    let s = "1234567890";
+    let a = &s[3..3];
 }
