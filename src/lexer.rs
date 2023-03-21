@@ -6,18 +6,22 @@ struct Token {
 }
 
 impl Token {
-    fn new() -> Self {
+    fn new(token_type: TokenType, head: usize, tail: usize) -> Self {
         Self {
             token_type: TokenType::Int,
-            range: 0..0,
+            range: head..tail,
         }
     }
 }
 #[derive(PartialEq)]
-
-enum TokenState {
+enum State {
     Init,
-    Recoginzing,
+    String,
+    Int,
+    Float,
+    True,
+    False,
+    Null,
     Err,
 }
 
@@ -32,8 +36,11 @@ enum TokenType {
     // lexical like 12.3
     Float,
 
-    // lexical like false or true
-    Bool,
+    // lexical like false true
+    True,
+
+    // lexical like false false
+    False,
 
     // lexical Null
     Null,
@@ -55,15 +62,14 @@ enum TokenType {
 
     // lexical "]"
     RightMiddleBracket,
-
-    // lexical " "
-    WhiteSpace,
 }
 
 struct Lexer {
     str: &'static str,
     head: usize,
-    state: TokenState,
+    now: usize,
+    state: State,
+    token: Vec<Token>,
 }
 
 impl Lexer {
@@ -71,61 +77,46 @@ impl Lexer {
         Self {
             str: s,
             head: 0,
-            state: TokenState::Init,
+            now: 0,
+            state: State::Init,
+            token: vec![],
         }
     }
 
-    fn parse_colon(&mut self) -> Option<Token> {
-        if self.state == TokenState::Init {
-            self.head += 1;
-            Some(Token::new())
-        } else {
-            None
-        }
-    }
-
-    fn parse_comma(&mut self) -> Option<Token> {
-        if self.state == TokenState::Init {
-            self.head += 1;
-            Some(Token::new())
-        } else {
-            None
-        }
-    }
-
-    fn parse_big_left_bracket(&mut self) -> Option<Token> {
-        if self.state == TokenState::Init {
-            self.head += 1;
-            Some(Token::new())
-        } else {
-            None
-        }
-    }
-
-    fn parse_big_right_bracket(&mut self) -> Option<Token> {
-        if self.state == TokenState::Init {
-            self.head += 1;
-            Some(Token::new())
-        } else {
-            None
-        }
-    }
-
-    fn parse_middle_left_bracket(&mut self) -> Option<Token> {
-        if self.state == TokenState::Init {
-            self.head += 1;
-            Some(Token::new())
-        } else {
-            None
-        }
-    }
-
-    fn parse_middle_right_bracket(&mut self) -> Option<Token> {
-        if self.state == TokenState::Init {
-            self.head += 1;
-            Some(Token::new())
-        } else {
-            None
+    fn token(&mut self) {
+        loop {
+            match self.state {
+                State::Init => match &self.str.chars().next().unwrap() {
+                    '{' => {
+                        let t = Token::new(TokenType::LeftBigBracket, self.head, self.now);
+                        self.token.push(t);
+                        self.head += 1;
+                        self.now += 1;
+                    },
+                    '0'..='9' => {
+                        self.state = State::Int;
+                        self.now += 1;
+                    },
+                    '"' => {
+                        self.state = State::String;
+                        self.now += 1;
+                    },
+                    't' => {
+                        self.state = State::True;
+                        self.now += 1;
+                    },
+                    'f' => {
+                        self.state = State::False;
+                        self.now += 1;
+                    },
+                    'n' => {
+                        self.state = State::Null;
+                        self.now += 1;
+                    },
+                    _ => println!("tt"),
+                }
+                _ => println!("others"),
+            }
         }
     }
 }

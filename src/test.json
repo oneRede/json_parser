@@ -3,5 +3,7 @@
     "string": "123456",
     "array": [1,2,3,4,5,6],
     "object": {"key": "value"},
-    "bool": false
+    "bool": false,
+    "float": 0.4,
+    "value": null
 }
