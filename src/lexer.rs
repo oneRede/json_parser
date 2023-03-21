@@ -92,40 +92,44 @@ impl Lexer {
             match self.state {
                 State::Init => match chars.next().unwrap() {
                     '{' => {
+                        self.now += 1;
                         let t = Token::new(TokenType::LeftBigBracket, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
-                        self.now += 1;
+                        self.head = self.now;
                     }
                     '}' => {
+                        self.now += 1;
                         let t = Token::new(TokenType::RightBigBracket, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
-                        self.now += 1;
+                        self.head = self.now;
                     }
                     '[' => {
+                        self.now += 1;
                         let t = Token::new(TokenType::LeftMiddleBracket, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
-                        self.now += 1;
+                        
+                        self.head = self.now;
                     }
                     ']' => {
+                        self.now += 1;
                         let t = Token::new(TokenType::RightMiddleBracket, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
-                        self.now += 1;
+                        
+                        self.head = self.now;
                     }
                     ':' => {
+                        self.now += 1;
                         let t = Token::new(TokenType::Colon, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
-                        self.now += 1;
+                        
+                        self.head = self.now;
                     }
                     ',' => {
+                        self.now += 1;
                         let t = Token::new(TokenType::Comma, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
-                        self.now += 1;
+                        
+                        self.head = self.now;
                     }
                     '0'..='9' => {
                         println!("int");
@@ -161,34 +165,34 @@ impl Lexer {
                     ',' => {
                         let t = Token::new(TokenType::Int, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
+                        
+                        self.head = self.now;
                         self.now += 1;
                         let t = Token::new(TokenType::Comma, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
-                        self.now += 1;
+                        
+                        self.head = self.now;
                         self.state = State::Init;
                     }
                     ']' => {
                         let t = Token::new(TokenType::Int, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
+                        
+                        self.head = self.now;
                         self.now += 1;
                         let t = Token::new(TokenType::RightMiddleBracket, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
-                        self.now += 1;
+                        self.head = self.now;
                         self.state = State::Init;
                     }
                     '}' => {
                         let t = Token::new(TokenType::Int, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
+                        self.head = self.now;
                         self.now += 1;
                         let t = Token::new(TokenType::RightMiddleBracket, self.head, self.now);
                         self.token.push(t);
-                        self.head += 1;
-                        self.now += 1;
+                        self.head = self.now;
                         self.state = State::Init;
                     }
                     _ => {
@@ -209,4 +213,5 @@ fn test_empty_josn() {
     let mut lexer = Lexer::new(s);
     lexer.token();
     println!("{:?}", lexer.token);
+    println!("{:?}", &s[0..1]);
 }
