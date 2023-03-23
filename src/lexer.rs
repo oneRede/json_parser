@@ -1,4 +1,4 @@
-use std::ops::Range;
+use std::{ops::Range, str::Chars};
 
 #[derive(Debug)]
 struct Token {
@@ -14,6 +14,7 @@ impl Token {
         }
     }
 }
+
 #[derive(Debug, PartialEq)]
 enum State {
     Init,
@@ -27,6 +28,7 @@ enum State {
     Null,
     Err,
 }
+
 #[derive(Debug, PartialEq)]
 enum TokenType {
     // lexical like "string"
@@ -71,6 +73,65 @@ enum TokenType {
     // lexical "]"
     RightMiddleBracket,
 }
+
+#[derive(Debug)]
+struct Cursor {
+    chars: Chars<'static>,
+    head: usize,
+    now: usize,
+    len: usize,
+}
+
+impl Cursor {
+    fn new(s: &'static str) -> Self {
+        Self {
+            chars: s.chars(),
+            head: 0,
+            now: 0,
+            len: s.len(),
+        }
+    }
+
+    fn get_chars(&mut self, n: usize) -> Vec<char> {
+        let mut chars:Vec<char> = vec![];
+        for _ in 0..n{
+            chars.push(self.chars.next().unwrap());
+            self.now += 1;
+        }
+        chars
+    }
+
+    fn get_char(&mut self) -> Option<char> {
+        self.now += 1;
+        self.chars.next()
+        
+    }
+
+    fn init(&mut self) {
+        self.head = self.now;
+    }
+}
+
+#[derive(Debug)]
+enum IntType {
+    Int,
+    ScientificInt,
+}
+
+#[derive(Debug)]
+enum FloatType {
+    Float,
+    ScientificFloat,
+}
+
+#[derive(Debug)]
+pub enum LexerError {
+    IntError,
+    FloatError,
+    StringError,
+    ValueError,
+}
+
 #[derive(Debug)]
 struct Lexer {
     str: &'static str,
@@ -324,7 +385,7 @@ impl Lexer {
                         return ();
                     }
                 },
-                State::Float => match chars.next().unwrap(){
+                State::Float => match chars.next().unwrap() {
                     '0'..='9' => {
                         self.now += 1;
                     }
@@ -415,7 +476,7 @@ impl Lexer {
                         println!("error");
                         return ();
                     }
-                }
+                },
                 _ => println!("others"),
             }
         }

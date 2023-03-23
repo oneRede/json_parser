@@ -1,9 +1,5 @@
 mod lexer;
+mod error;
 fn main() {
-    let s = "\"key\"";
-    println!("{:?}", s.len());
-    for c in s.chars(){
-        println!("{:?}", c);
-    }
-    
+    let _n: i32 = 3;
 }
