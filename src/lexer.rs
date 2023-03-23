@@ -1,4 +1,4 @@
-use std::{ops::Range, str::Chars};
+use std::{ops::Range, str::Chars, fmt};
 
 #[derive(Debug)]
 struct Token {
@@ -33,43 +33,30 @@ enum State {
 enum TokenType {
     // lexical like "string"
     String,
-
     // lexical like 123456
     Int,
-
     // scientific notation int 1234e123
     IntWithE,
-
     // lexical like 12.3
     Float,
-
     // scientific notation float 1234e123
     FloatWithE,
-
     // lexical like false true
     True,
-
     // lexical like false false
     False,
-
     // lexical Null
     Null,
-
     // lexical ":"
     Colon,
-
     // lexical ","
     Comma,
-
     // lexical "{"
     LeftBigBracket,
-
     // lexical "}"
     RightBigBracket,
-
     // lexical "["
     LeftMiddleBracket,
-
     // lexical "]"
     RightMiddleBracket,
 }
@@ -130,6 +117,12 @@ pub enum LexerError {
     FloatError,
     StringError,
     ValueError,
+}
+
+impl fmt::Display for LexerError{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 #[derive(Debug)]
