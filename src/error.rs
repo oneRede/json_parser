@@ -1,8 +1,10 @@
-use chrono::{Datelike, Duration, Local, TimeZone, Timelike};
-use std::{fmt, process};
+use chrono::Local;
+use std::fmt;
 
 use crate::lexer::LexerError;
 
+
+#[allow(unused)]
 #[derive(Debug)]
 enum Error {
     LexerError(LexerError),
@@ -14,6 +16,7 @@ impl fmt::Display for Error {
     }
 }
 
+#[allow(unused)]
 fn fatal_error(des: &'static str, error: Error) {
     let fmt_datetime = "%Y-%m-%d %H:%M:%S";
     let datetime = Local::now().format(fmt_datetime);

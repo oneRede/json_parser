@@ -1,5 +1,6 @@
 use std::{ops::Range, str::Chars, fmt};
 
+#[allow(unused)]
 #[derive(Debug)]
 struct Token {
     token_type: TokenType,
@@ -7,6 +8,7 @@ struct Token {
 }
 
 impl Token {
+    #[allow(unused)]
     fn new(token_type: TokenType, head: usize, tail: usize) -> Self {
         Self {
             token_type: token_type,
@@ -15,6 +17,7 @@ impl Token {
     }
 }
 
+#[allow(unused)]
 #[derive(Debug, PartialEq)]
 enum State {
     Init,
@@ -29,6 +32,7 @@ enum State {
     Err,
 }
 
+#[allow(unused)]
 #[derive(Debug, PartialEq)]
 enum TokenType {
     // lexical like "string"
@@ -61,6 +65,7 @@ enum TokenType {
     RightMiddleBracket,
 }
 
+#[allow(unused)]
 #[derive(Debug)]
 struct Cursor {
     chars: Chars<'static>,
@@ -69,6 +74,7 @@ struct Cursor {
     len: usize,
 }
 
+#[allow(unused)]
 impl Cursor {
     fn new(s: &'static str) -> Self {
         Self {
@@ -99,18 +105,21 @@ impl Cursor {
     }
 }
 
+#[allow(unused)]
 #[derive(Debug)]
 enum IntType {
     Int,
     ScientificInt,
 }
 
+#[allow(unused)]
 #[derive(Debug)]
 enum FloatType {
     Float,
     ScientificFloat,
 }
 
+#[allow(unused)]
 #[derive(Debug)]
 pub enum LexerError {
     IntError,
@@ -125,6 +134,7 @@ impl fmt::Display for LexerError{
     }
 }
 
+#[allow(unused)]
 #[derive(Debug)]
 struct Lexer {
     str: &'static str,
@@ -135,6 +145,8 @@ struct Lexer {
 }
 
 impl Lexer {
+
+    #[allow(unused)]
     fn new(s: &'static str) -> Self {
         Self {
             str: s,
@@ -145,6 +157,7 @@ impl Lexer {
         }
     }
 
+    #[allow(unused)]
     fn token(&mut self) {
         let chars = &mut self.str.chars();
         loop {
