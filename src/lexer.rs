@@ -17,6 +17,12 @@ impl Token {
     }
 }
 
+impl fmt::Display for Token {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
 #[allow(unused)]
 #[derive(Debug, PartialEq)]
 enum State {
@@ -63,6 +69,58 @@ enum TokenType {
     LeftMiddleBracket,
     // lexical "]"
     RightMiddleBracket,
+    // whitespace
+    WhiteSpace
+}
+
+#[allow(unused)]
+#[derive(Debug, PartialEq)]
+enum _TokenType {
+    Bool(Bool),
+    Numeric(Numeric),
+    String,
+    Mark(Mark),
+    Null,
+    WhiteSpace,
+}
+
+#[allow(unused)]
+#[derive(Debug, PartialEq)]
+enum Bool {
+    True,
+    False,
+}
+
+#[allow(unused)]
+#[derive(Debug, PartialEq)]
+enum Numeric {
+    Int(Int),
+    Float(Float),
+}
+
+#[allow(unused)]
+#[derive(Debug, PartialEq)]
+enum Int {
+    Normal,
+    Scientific,
+}
+
+#[allow(unused)]
+#[derive(Debug, PartialEq)]
+enum Float{
+    Normal,
+    Scientific,
+}
+
+#[allow(unused)]
+#[derive(Debug, PartialEq)]
+enum Mark {
+    Colon,
+    Comma,
+    LeftBigBracket,
+    RightBigBracket,
+    LeftMiddleBracket,
+    RightMiddleBracket,
 }
 
 #[allow(unused)]
@@ -103,20 +161,6 @@ impl Cursor {
     fn init(&mut self) {
         self.head = self.now;
     }
-}
-
-#[allow(unused)]
-#[derive(Debug)]
-enum IntType {
-    Int,
-    ScientificInt,
-}
-
-#[allow(unused)]
-#[derive(Debug)]
-enum FloatType {
-    Float,
-    ScientificFloat,
 }
 
 #[allow(unused)]
@@ -202,6 +246,13 @@ impl Lexer {
                     ',' => {
                         self.now += 1;
                         let t = Token::new(TokenType::Comma, self.head, self.now);
+                        self.token.push(t);
+
+                        self.head = self.now;
+                    }
+                    ' ' => {
+                        self.now += 1;
+                        let t = Token::new(TokenType::WhiteSpace, self.head, self.now);
                         self.token.push(t);
 
                         self.head = self.now;
@@ -490,9 +541,23 @@ impl Lexer {
 }
 
 #[test]
-fn test_empty_json() {
-    let s = "{\"bool\":true,\"num\":123.4567e890}";
-    println!("{:?}", s.len());
+fn test_lex_empty_json() {
+    let s = "{}";
+    let mut lexer = Lexer::new(s);
+    lexer.token();
+    println!("{:?}", lexer.token);
+}
+
+#[test]
+fn test_lex_full_json() {
+    let s = "{\"bool\":true,\"num\":1992,\"string\":\"abc\"}";
+    let mut lexer = Lexer::new(s);
+    lexer.token();
+    println!("{:?}", lexer.token);
+}
+#[test]
+fn test_lex_full_json_with_whitespace() {
+    let s = "{\"bool\":true, \"num\":1992,\"string\":\"abc\"}";
     let mut lexer = Lexer::new(s);
     lexer.token();
     println!("{:?}", lexer.token);
