@@ -1,5 +1,6 @@
 mod lexer;
 mod error;
+mod parser_v2;
 
 use crate::lexer::LexerError;
 fn main() {

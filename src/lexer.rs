@@ -2,7 +2,7 @@ use std::{ops::Range, str::Chars, fmt};
 
 #[allow(unused)]
 #[derive(Debug)]
-struct Token {
+pub struct Token {
     token_type: TokenType,
     range: Range<usize>,
 }
