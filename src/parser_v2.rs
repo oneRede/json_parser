@@ -1,4 +1,5 @@
 use crate::lexer::Token;
+
 struct Parser {
     tokens: Vec<Token>,
 }
@@ -11,3 +12,4 @@ struct JsonObject {
     keys: Vec<String>,
     values: Vec<Box<dyn JsonValue>>
 }
+
