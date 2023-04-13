@@ -3,8 +3,8 @@ use std::{ops::Range, str::Chars, fmt};
 #[allow(unused)]
 #[derive(Debug)]
 pub struct Token {
-    token_type: TokenType,
-    range: Range<usize>,
+    pub token_type: TokenType,
+    pub range: Range<usize>,
 }
 
 impl Token {
@@ -40,7 +40,8 @@ enum State {
 
 #[allow(unused)]
 #[derive(Debug, PartialEq)]
-enum TokenType {
+#[derive(Eq, Hash)]
+pub enum TokenType {
     // lexical like "string"
     String,
     // lexical like 123456
@@ -70,7 +71,9 @@ enum TokenType {
     // lexical "]"
     RightMiddleBracket,
     // whitespace
-    WhiteSpace
+    WhiteSpace, 
+    //end
+    End,
 }
 
 #[allow(unused)]
