@@ -5,8 +5,17 @@ mod parser_v2;
 use crate::lexer::LexerError;
 
 
+
 fn main() {
-    const _GOTO: [i32;3] = [1,2,3];
-    let _n: i32 = 3;
-    println!("{:?}", LexerError::IntError);
+    #[derive(Copy, Clone, Debug)]
+    enum Value{
+        A,
+        B,
+    }
+
+    let mut a = Value::A;
+    let b = a;
+    a = Value::B;
+    println!("{:?}", a);
+    println!("{:?}", b);
 }

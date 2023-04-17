@@ -65,6 +65,7 @@ enum Action {
 
 #[allow(unused)]
 #[derive(Eq, Hash, PartialEq, Debug)]
+#[derive(Copy, Clone)]
 enum State {
     Null,
     I0,
@@ -79,6 +80,7 @@ enum State {
     I9,
     I10,
     I11,
+    ACC,
 }
 
 impl State {
@@ -101,6 +103,7 @@ impl State {
 }
 
 #[allow(unused)]
+#[derive(Clone)]
 #[derive(Debug, PartialEq)]
 struct Stack {
     data: Vec<State>,
@@ -125,6 +128,10 @@ impl Stack {
         self.head -= 1;
         let state = self.data.pop();
         state
+    }
+
+    fn get_head_state(&mut self) -> Option<State> {
+        return Some(self.data[self.head].clone());
     }
 }
 
@@ -277,25 +284,31 @@ impl Parser {
         loop {
             if self.state_stack.head == 0 {
                 self.state_stack.push(State::I0);
-                self.state_stack.head += 1;
+                
             }
-
             let token = self.tokens.get(self.head_token).unwrap();
-            let rs = self.action(
-                self.state_stack
-                    .data
-                    .get(self.state_stack.head - 1)
-                    .unwrap(),
-                &token.token_type,
-            );
-            match rs {
-                None => {
-                    print!("Error!!");
-                    return Err("Error!!".to_string())
-                }
-                _ => {}
+            let state = self.state_stack.get_head_state().unwrap();
+            let (action, state, non_terminal) = self.action(&state, &token.token_type).unwrap();
+            if state.eq(&State::ACC){
+                return Ok("ok and over!!".to_string())
             }
-            return Ok("Ok".to_string())
+            match action {
+                Action::Shift => {
+                    self.state_stack.push(*state);
+                    continue;
+                }
+                Action::Reduction => {
+                    self.state_stack.pop();
+                    let head_state = self.state_stack.get_head_state().unwrap();
+                    // let next_state = self.goto(head_state, non_terminal);
+                    // self.state_stack.push(next_state);
+                    continue
+                }
+                _ => {
+                    print!("")
+                }
+            }
+            return Ok("Ok".to_string());
         }
     }
 
@@ -318,7 +331,7 @@ impl Parser {
     fn goto(&self, state: &State, non_terminal: &NonTerminal) -> Option<&State> {
         if self.goto.contains_key(&state) {
             if self.goto[&state].contains_key(non_terminal) {
-                return Some(&self.goto[state][non_terminal]);
+                return Some(&self.goto[&state][non_terminal]);
             } else {
                 return None;
             }
@@ -333,7 +346,7 @@ impl Parser {
             NonTerminal::A => Some(3),
             NonTerminal::K => Some(1),
             NonTerminal::V => Some(1),
-            _ => None
+            _ => None,
         }
     }
 }
